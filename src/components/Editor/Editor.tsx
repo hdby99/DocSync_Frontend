@@ -1,6 +1,6 @@
 "use client";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import Quill, { RangeStatic } from "quill";
+import Quill from "quill";
 import "quill/dist/quill.snow.css";
 import { io, Socket } from "socket.io-client";
 import Delta from "quill-delta";
@@ -10,6 +10,11 @@ import Chat from "./ChatTab";
 interface EditorProps {
   documentId: string;
 }
+
+type RangeStatic = {
+  index: number;
+  length: number;
+};
 
 const Editor: React.FC<EditorProps> = ({ documentId }) => {
   const [socket, setSocket] = useState<Socket | null>(null);
@@ -141,12 +146,12 @@ const Editor: React.FC<EditorProps> = ({ documentId }) => {
 
     socket.on("receive-cursor", handleCursorReceive);
 
-    const handleUserUpdate = (users) => {
-      console.log("Users currently editing:", users);
+    const handleUserUpdate = (users: any[]) => {
+      console.log("Users currently editing:", typeof users);
     };
 
     socket.on("update-users", handleUserUpdate);
-    socket.once("user-disconnect", (remoteUserId) => {
+    socket.once("user-disconnect", (remoteUserId: string) => {
       document.querySelector(`.cursor-${remoteUserId}`)?.remove();
     });
 
