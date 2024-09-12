@@ -26,7 +26,9 @@ const Editor: React.FC<EditorProps> = ({ documentId }) => {
   const [title, setTitle] = useState("Untitled Document");
 
   useEffect(() => {
-    const s = io(`${process.env.NEXT_PUBLIC_BACKEND_URL}`);
+    const s = io(`${process.env.NEXT_PUBLIC_BACKEND_URL}`, {
+      transports: ["websocket"],
+    });
     setSocket(s);
 
     s.on("title-updated", (newTitle: string) => {
