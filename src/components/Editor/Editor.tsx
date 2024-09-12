@@ -119,7 +119,13 @@ const Editor: React.FC<EditorProps> = ({ documentId }) => {
   useEffect(() => {
     if (socket == null || quill == null) return;
 
-    const handleCursorReceive = ({ userId: remoteUserId, range }) => {
+    const handleCursorReceive = ({
+      userId: remoteUserId,
+      range,
+    }: {
+      userId: string;
+      range: RangeStatic;
+    }) => {
       if (remoteUserId === userId.current) return;
 
       // Remove any existing cursor for this user
