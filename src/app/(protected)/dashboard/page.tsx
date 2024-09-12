@@ -2,12 +2,14 @@
 
 import React, { useEffect, useState, useRef } from "react";
 import Link from "next/link";
-import Quill from "quill"; // Import QuillJS
+// import Quill from "quill"; // Import QuillJS
 import "quill/dist/quill.snow.css"; // Quill styles
 import { motion } from "framer-motion";
 import Lottie from "lottie-react";
 import loaderAnimation from "../../../../public/loader.json";
-import DocumentCard from "@/components/Editor/DocumentCard";
+
+import dynamic from "next/dynamic"; // Dynamically import components
+// const QuillNoSSRWrapper = dynamic(() => import("quill"), { ssr: false });
 
 const Dashboard: React.FC = () => {
   const [documents, setDocuments] = useState([]);
@@ -101,46 +103,66 @@ const Dashboard: React.FC = () => {
   );
 };
 
-// const DocumentCard = ({ document }: { document: any }) => {
-//   const quillRef = useRef<HTMLDivElement>(null);
+const DocumentCard = ({ document }: { document: any }) => {
+  const quillRef = useRef<HTMLDivElement>(null);
 
-//   useEffect(() => {
-//     if (quillRef.current) {
-//       const quill = new Quill(quillRef.current, {
-//         readOnly: true,
-//         theme: "bubble",
-//       });
+  // useEffect(() => {
+  //   if (quillRef.current) {
+  //     const quill = new Quill(quillRef.current, {
+  //       readOnly: true,
+  //       theme: "bubble",
+  //     });
 
-//       if (document.data && document.data.ops) {
-//         quill.setContents(document.data.ops);
-//       }
-//     }
-//   }, [document]);
+  //     if (document.data && document.data.ops) {
+  //       quill.setContents(document.data.ops);
+  //     }
+  //   }
+  // }, [document]);
 
-//   return (
-//     <div className="border p-4 rounded-lg shadow-lg bg-white">
-//       <Link href={`/document/${document._id}`}>
-//         <div className="h-48 mb-4 bg-gray-100 flex justify-center items-center text-gray-500">
-//           <div
-//             ref={quillRef}
-//             className="w-full h-full overflow-hidden"
-//             style={{ maxHeight: "150px" }}
-//           ></div>
-//         </div>
-//       </Link>
-//       <div>
-//         <Link
-//           href={`/document/${document._id}`}
-//           className="text-blue-600 hover:underline text-lg font-medium block"
-//         >
-//           {document.title ? document.title : `Document ID: ${document._id}`}
-//         </Link>
-//         <p className="text-gray-500 text-sm">
-//           Last updated: {new Date(document.updatedAt).toLocaleString()}
-//         </p>
-//       </div>
-//     </div>
-//   );
-// };
+  useEffect(() => {
+    if (typeof window !== "undefined" && quillRef.current) {
+      // Dynamically import Quill on the client side
+      import("quill").then((Quill) => {
+        // Ensure quillRef.current is not null
+        if (quillRef.current) {
+          const quill = new Quill.default(quillRef.current, {
+            readOnly: true,
+            theme: "bubble",
+          });
+
+          // Set the document content if available
+          if (document.data && document.data.ops) {
+            quill.setContents(document.data.ops);
+          }
+        }
+      });
+    }
+  }, [document]);
+
+  return (
+    <div className="border p-4 rounded-lg shadow-lg bg-white">
+      <Link href={`/document/${document._id}`}>
+        <div className="h-48 mb-4 bg-gray-100 flex justify-center items-center text-gray-500">
+          <div
+            ref={quillRef}
+            className="w-full h-full overflow-hidden"
+            style={{ maxHeight: "150px" }}
+          ></div>
+        </div>
+      </Link>
+      <div>
+        <Link
+          href={`/document/${document._id}`}
+          className="text-blue-600 hover:underline text-lg font-medium block"
+        >
+          {document.title ? document.title : `Document ID: ${document._id}`}
+        </Link>
+        <p className="text-gray-500 text-sm">
+          Last updated: {new Date(document.updatedAt).toLocaleString()}
+        </p>
+      </div>
+    </div>
+  );
+};
 
 export default Dashboard;
