@@ -55,7 +55,7 @@ const Header: React.FC = () => {
         <div className="flex items-center space-x-2">
           {/* Logo */}
           {/* Title */}
-          <div className="text-2xl font-semibold text-gray-800 tracking-tight">
+          <div className="text-3xl font-semibold text-gray-800 tracking-tight">
             <Link href="/">DocSync</Link>
           </div>
         </div>
@@ -106,7 +106,7 @@ const Header: React.FC = () => {
           ) : (
             // Unauthenticated Navigation
             <>
-              <Link
+              {/* <Link
                 href="/auth"
                 className="text-gray-700 hover:text-blue-600 transition-colors duration-200 font-medium"
               >
@@ -116,7 +116,7 @@ const Header: React.FC = () => {
                 <Button className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md transition-all duration-200">
                   Sign Up
                 </Button>
-              </Link>
+              </Link> */}
             </>
           )}
         </nav>

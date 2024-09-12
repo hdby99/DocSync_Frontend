@@ -4,13 +4,18 @@ import React, { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import Quill from "quill"; // Import QuillJS
 import "quill/dist/quill.snow.css"; // Quill styles
+import { motion } from "framer-motion";
+import Lottie from "lottie-react";
+import loaderAnimation from "../../../../public/loader.json";
 
 const Dashboard: React.FC = () => {
   const [documents, setDocuments] = useState([]);
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean | null>(true);
 
   useEffect(() => {
     const fetchDocuments = async () => {
+      setIsLoading(true);
       try {
         const token = localStorage.getItem("token");
         const userId = localStorage.getItem("userId");
@@ -40,6 +45,7 @@ const Dashboard: React.FC = () => {
 
         const data = await response.json();
         setDocuments(data.documents);
+        setIsLoading(false);
       } catch (error) {
         console.error("Error fetching documents:", error);
         setError("Failed to fetch documents");
@@ -48,6 +54,31 @@ const Dashboard: React.FC = () => {
 
     fetchDocuments();
   }, []);
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen">
+        <motion.div
+          initial={{ scale: 1 }}
+          animate={{ scale: 0.5 }}
+          transition={{
+            duration: 0.5,
+            repeat: Infinity,
+            repeatType: "reverse",
+          }}
+        >
+          <Lottie
+            animationData={loaderAnimation}
+            loop={true}
+            style={{ width: 500, height: 500 }}
+          />
+        </motion.div>
+        <p className="mt-4 text-lg font-semibold text-gray-700">
+          Loading your documents, hang tight!
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto p-4">
