@@ -1,6 +1,6 @@
 "use client";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import Quill from "quill";
+import Quill, { RangeStatic } from "quill";
 import "quill/dist/quill.snow.css";
 import { io, Socket } from "socket.io-client";
 import Delta from "quill-delta";
@@ -98,7 +98,7 @@ const Editor: React.FC<EditorProps> = ({ documentId }) => {
   useEffect(() => {
     if (socket == null || quill == null) return;
 
-    const handleSelectionChange = (range: Quill.RangeStatic | null) => {
+    const handleSelectionChange = (range: RangeStatic | null) => {
       if (range == null) return;
       socket.emit("send-cursor", { userId: userId.current, range, documentId });
     };
