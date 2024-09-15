@@ -8,9 +8,6 @@ import { motion } from "framer-motion";
 import Lottie from "lottie-react";
 import loaderAnimation from "../../../../public/loader.json";
 
-import dynamic from "next/dynamic"; // Dynamically import components
-// const QuillNoSSRWrapper = dynamic(() => import("quill"), { ssr: false });
-
 const Dashboard: React.FC = () => {
   const [documents, setDocuments] = useState([]);
   const [error, setError] = useState<string | null>(null);
@@ -105,19 +102,6 @@ const Dashboard: React.FC = () => {
 
 const DocumentCard = ({ document }: { document: any }) => {
   const quillRef = useRef<HTMLDivElement>(null);
-
-  // useEffect(() => {
-  //   if (quillRef.current) {
-  //     const quill = new Quill(quillRef.current, {
-  //       readOnly: true,
-  //       theme: "bubble",
-  //     });
-
-  //     if (document.data && document.data.ops) {
-  //       quill.setContents(document.data.ops);
-  //     }
-  //   }
-  // }, [document]);
 
   useEffect(() => {
     if (typeof window !== "undefined" && quillRef.current) {

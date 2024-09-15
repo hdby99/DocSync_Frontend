@@ -130,7 +130,6 @@ const Editor: React.FC<EditorProps> = ({ documentId }) => {
     }) => {
       if (remoteUserId === userId.current) return;
 
-      // Remove any existing cursor for this user
       document.querySelector(`.cursor-${remoteUserId}`)?.remove();
 
       // Create a new cursor element
@@ -155,7 +154,7 @@ const Editor: React.FC<EditorProps> = ({ documentId }) => {
     socket.on("receive-cursor", handleCursorReceive);
 
     const handleUserUpdate = (users: any[]) => {
-      console.log("Users currently editing:", typeof users);
+      console.log("Users currently editing:", users);
     };
 
     socket.on("update-users", handleUserUpdate);
@@ -198,8 +197,8 @@ const Editor: React.FC<EditorProps> = ({ documentId }) => {
       },
       theme: "snow",
     });
-    q.disable();
     q.setText("Loading...");
+    q.disable();
     setQuill(q);
   }, []);
 
